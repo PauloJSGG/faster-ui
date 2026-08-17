@@ -1,0 +1,123 @@
+/*
+ * Tokens are declared under their plain names. `prefix(fui)` on the Tailwind
+ * import in index.css namespaces them on the way out, so `--color-primary` here
+ * ships as `--fui-color-primary` and drives the `fui:bg-primary` utility. A host
+ * application's own `--color-primary` is a different custom property entirely.
+ *
+ * Two consequences of the prefix are worth knowing before editing this file.
+ *
+ * `var()` references have to be written with the prefix. Tailwind rewrites the
+ * property being declared but not the values, so `var(--color-primary-600)`
+ * would point at a name that does not exist in the output and the utility would
+ * resolve to nothing - no error, just an unstyled component.
+ *
+ * And the block is `static` so that every token is emitted whether or not a
+ * utility uses it. By default Tailwind drops unused theme variables, and it
+ * tracks usage by the authored name - so the primitives behind the semantic
+ * aliases below, which are only ever reached through a prefixed `var()`, would
+ * be shaken out from under them.
+ *
+ * Some of these names - `--text-sm`, `--radius-md`, `--font-sans` - are also
+ * Tailwind's own. Redefining them replaces Tailwind's defaults inside this build
+ * only, which is the intent: `fui:text-sm` means this design system's 12px, not
+ * the stock 0.875rem.
+ */
+@theme static {
+  --font-sans: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans SC", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* primitives */
+  --color-primary-700: #00ABB6;
+  --color-primary-600: #15C5CE;
+  --color-primary-500: #47CFD6;
+  --color-primary-400: #7DDDE1;
+  --color-primary-300: #B0EBEC;
+  --color-danger-700: #EC2D30;
+  --color-danger-600: #F64C4C;
+  --color-danger-500: #EB6F70;
+  --color-danger-400: #F49898;
+  --color-danger-300: #FFCCD2;
+  --color-danger-100: #FEF2F2;
+  --color-neutral-600: #4B4B4B;
+  --color-neutral-500: #8E8E8E;
+  --color-neutral-400: #CACACA;
+  --color-neutral-300: #E1E1E1;
+  --color-neutral-200: #EEEEEE;
+  --color-neutral-100: #F5F5F5;
+
+  /* semantics */
+  --color-background: #FFFFFF;
+  --color-foreground: #000000;
+  --color-primary: var(--fui-color-primary-600);
+  --color-primary-hover: var(--fui-color-primary-500);
+  --color-primary-active: var(--fui-color-primary-700);
+  --color-primary-disabled: var(--fui-color-primary-300);
+  --color-primary-ghost-disabled: var(--fui-color-primary-400);
+  --color-danger: var(--fui-color-danger-600);
+  --color-danger-hover: var(--fui-color-danger-500);
+  --color-danger-active: var(--fui-color-danger-700);
+  --color-danger-disabled: var(--fui-color-danger-300);
+  --color-danger-outline-disabled: var(--fui-color-danger-400);
+  --color-danger-ghost-hover: var(--fui-color-danger-100);
+  --color-danger-ghost-active: var(--fui-color-danger-300);
+  --color-neutral: var(--fui-color-neutral-600);
+  --color-neutral-border: var(--fui-color-neutral-300);
+  --color-neutral-border-disabled: var(--fui-color-neutral-200);
+  --color-neutral-text-disabled: var(--fui-color-neutral-400);
+  --color-neutral-hover: var(--fui-color-neutral-100);
+  --color-neutral-active: var(--fui-color-neutral-300);
+  --color-border: var(--fui-color-neutral-300);
+
+  /* button */
+  --height-button-sm: 24px;
+  --height-button-md: 36px;
+  --height-button-lg: 40px;
+  --padding-button-sm: 3px 4px;
+  --padding-button-md: 7px 8px;
+  --padding-button-lg: 7px 8px;
+  --min-width-button-sm: 54px;
+  --min-width-button-md: 82px;
+  --min-width-button-lg: 90px;
+  --min-height-button-sm: 24px;
+  --min-height-button-md: 36px;
+  --min-height-button-lg: 40px;
+  --gap-button: 4px;
+  --size-icon-button-sm: 24px;
+  --size-icon-button-md: 36px;
+  --size-icon-button-lg: 40px;
+  --size-icon-sm: 14px;
+  --size-icon-md: 16px;
+  --size-icon-lg: 18px;
+
+  /* input */
+  --height-input-sm: 24px;
+  --height-input-md: 36px;
+  --height-input-lg: 40px;
+  --padding-input-sm: 0 8px;
+  --padding-input-md: 0 12px;
+  --padding-input-lg: 0 12px;
+  --gap-input-sm: 4px;
+  --gap-input-md: 8px;
+  --gap-input-lg: 8px;
+  --margin-input: 0 0 4px 0;
+
+  /* dialog */
+  --width-dialog-sm: 400px;
+  --width-dialog-md: 600px;
+  --width-dialog-lg: 900px;
+  --gap-dialog-footer: 8px;
+  --height-dialog-divider: 1px;
+  --color-dialog-divider: var(--fui-color-neutral-200);
+
+  /* radius */
+  --radius-md: 4px;
+  --radius-lg: 0.5rem;
+
+  /* type */
+  --text-sm: 12px;
+  --text-md: 14px;
+  --text-lg: 16px;
+  --text-xl: 18px;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: calc(2 / 1.5);
+}

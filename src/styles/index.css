@@ -1,0 +1,40 @@
+/*
+ * The one stylesheet entry: it builds the published `dist/index.css` and is the
+ * same file Storybook and the Cypress component runner load, so what renders in
+ * development is what ships.
+ *
+ * Preflight is deliberately absent. It resets every element on the page, which
+ * in a consuming application means wiping their base styles.
+ *
+ * `prefix(fui)` belongs on the theme import - that is the one Tailwind reads it
+ * from - and namespaces both halves of the output: utilities become
+ * `fui:bg-primary` and theme tokens are emitted as `--fui-color-primary`. Neither
+ * can collide with a host application's own Tailwind build.
+ *
+ * The utilities are imported without `layer(utilities)` on purpose. A layered
+ * rule loses to an unlayered one regardless of specificity, so utilities inside
+ * `@layer utilities` are beaten by an ordinary `button { background: #ddd }` in
+ * the host's global stylesheet - silently, and only for the properties it
+ * happens to set. Unlayered, plain specificity decides: `.fui\:bg-primary`
+ * scores one class and wins against a bare element selector.
+ *
+ * The theme block stays layered for the opposite reason. It is emitted as a
+ * `:root` rule, and in `@layer theme` it loses to anything the host declares
+ * rather than overriding it.
+ */
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme) prefix(fui);
+@import "./theme.css";
+@import "tailwindcss/utilities.css" prefix(fui) source(none);
+
+/*
+ * `source(none)` turns off automatic detection, which would otherwise scan the
+ * whole repository - stories, specs, even prose in Markdown - and emit a utility
+ * for every class-like string it found. Only shipped component source is
+ * scanned.
+ */
+@source "../components/**/*.{ts,tsx}";
+@source not "../components/**/*.stories.tsx";
+@source not "../components/**/*.test.tsx";
+@source not "../components/**/*.cy.tsx";

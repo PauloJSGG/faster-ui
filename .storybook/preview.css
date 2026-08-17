@@ -1,0 +1,9 @@
+/*
+ * Page chrome for the Storybook canvas only. This is not part of the published
+ * package, which is why it lives here rather than in src/styles - it targets
+ * <body>, and no component owns that.
+ */
+body {
+  margin: 0;
+  background-color: var(--fui-color-background);
+}
