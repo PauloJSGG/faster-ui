@@ -1,15 +1,5 @@
 import { cva } from "class-variance-authority";
 
-/*
- * The base string carries what Tailwind's preflight would otherwise supply -
- * `box-border`, `appearance-none`, `border-0`, `bg-transparent`, zeroed margin.
- * Preflight is not shipped because it would reset the host application's own
- * elements, so a <button> keeps the browser's grey face, border and 13px Arial
- * unless the component overrides them itself.
- *
- * The variants below set `border` and `bg-*` after this, and `cn` resolves the
- * pair so the later class wins.
- */
 export const buttonVariants = cva(
   "fui:box-border fui:m-0 fui:inline-flex fui:appearance-none fui:items-center fui:justify-center fui:gap-button fui:rounded-md fui:border-0 fui:bg-transparent fui:font-sans fui:text-center fui:font-medium fui:leading-normal fui:tracking-normal fui:antialiased fui:cursor-pointer fui:disabled:cursor-not-allowed fui:[&_svg]:block",
   {

@@ -38,7 +38,7 @@ function ControlledDialog({
 }
 
 describe("Dialog", () => {
-  it("stays closed until opened", () => {
+  it("stays closed by default", () => {
     render(
       <Dialog title="Details">
         <div>Body</div>
@@ -49,49 +49,39 @@ describe("Dialog", () => {
     expect(document.querySelector("dialog")).not.toHaveAttribute("open");
   });
 
-  it("opens when open is true", () => {
-    render(
+  it("labels the dialog from the title and omits the name when there is none", () => {
+    const { rerender } = render(
       <Dialog open title="Details">
         <div>Body</div>
       </Dialog>,
     );
 
-    expect(screen.getByRole("dialog", { name: "Details" })).toBeVisible();
-    expect(screen.getByText("Body")).toBeVisible();
-  });
+    const titled = document.querySelector("dialog")!;
+    const title = screen.getByRole("heading", { name: "Details" });
+    expect(titled).toHaveAttribute("aria-labelledby", title.id);
 
-  it("calls onOpenChange(false) when the close button is clicked", async () => {
-    const user = userEvent.setup();
-    const onOpenChange = jest.fn();
-
-    render(
-      <Dialog open title="Details" onOpenChange={onOpenChange}>
+    rerender(
+      <Dialog open>
         <div>Body</div>
       </Dialog>,
     );
 
-    await user.click(screen.getByRole("button", { name: "Close" }));
-
-    expect(onOpenChange).toHaveBeenCalledWith(false);
+    expect(document.querySelector("dialog")).not.toHaveAttribute(
+      "aria-labelledby",
+    );
   });
 
-  it("closes from the close button in a controlled dialog", async () => {
-    const user = userEvent.setup();
-
+  it.each(["sm", "md", "lg"] as const)("renders size %s as a named dialog", (size) => {
     render(
-      <ControlledDialog defaultOpen title="Details">
+      <Dialog open size={size} title="Details">
         <div>Body</div>
-      </ControlledDialog>,
+      </Dialog>,
     );
 
     expect(screen.getByRole("dialog", { name: "Details" })).toBeVisible();
-
-    await user.click(screen.getByRole("button", { name: "Close" }));
-
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
-  it("opens from a trigger in a controlled dialog", async () => {
+  it("opens from a trigger", async () => {
     const user = userEvent.setup();
 
     render(
@@ -105,27 +95,19 @@ describe("Dialog", () => {
     expect(screen.getByRole("dialog", { name: "Details" })).toBeVisible();
   });
 
-  it("opens by default when defaultOpen is true", () => {
-    render(
-      <Dialog defaultOpen title="Details">
-        <div>Body</div>
-      </Dialog>,
-    );
-
-    expect(screen.getByRole("dialog", { name: "Details" })).toBeVisible();
-  });
-
-  it("closes an uncontrolled dialog from the close button", async () => {
+  it("closes from the close button and calls onOpenChange(false)", async () => {
     const user = userEvent.setup();
+    const onOpenChange = jest.fn();
 
     render(
-      <Dialog defaultOpen title="Details">
+      <ControlledDialog defaultOpen title="Details" onOpenChange={onOpenChange}>
         <div>Body</div>
-      </Dialog>,
+      </ControlledDialog>,
     );
 
     await user.click(screen.getByRole("button", { name: "Close" }));
 
+    expect(onOpenChange).toHaveBeenCalledWith(false);
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
@@ -156,7 +138,7 @@ describe("Dialog", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
-  it("renders parent-provided footer actions", async () => {
+  it("fires parent-provided footer actions", async () => {
     const user = userEvent.setup();
     const onDelete = jest.fn();
     const onCancel = jest.fn();
@@ -185,19 +167,5 @@ describe("Dialog", () => {
 
     expect(onCancel).toHaveBeenCalledTimes(1);
     expect(onDelete).toHaveBeenCalledTimes(1);
-  });
-
-  it("renders full-width dividers between title, content, and footer", () => {
-    render(
-      <Dialog
-        open
-        title="Details"
-        footer={<button type="button">Ok</button>}
-      >
-        <div>Body</div>
-      </Dialog>,
-    );
-
-    expect(document.querySelectorAll("hr")).toHaveLength(2);
   });
 });

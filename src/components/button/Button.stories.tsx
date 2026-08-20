@@ -34,6 +34,32 @@ const Row = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
+const Catalog = ({ children }: { children: React.ReactNode }) => (
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start",
+      gap: "24px",
+    }}
+  >
+    {children}
+  </div>
+);
+
+const Section = ({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) => (
+  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+    <p style={{ margin: 0, fontSize: "12px", color: "#8E8E8E" }}>{label}</p>
+    {children}
+  </div>
+);
+
 const meta = {
   title: "Components/Button",
   component: Button,
@@ -61,7 +87,50 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Playground: Story = {};
+export const Playground: Story = {
+  argTypes: {
+    variant: { control: false },
+    size: { control: false },
+    disabled: { control: false },
+    text: { control: false },
+  },
+  render: () => (
+    <Catalog>
+      <Section label="Variants">
+        <Row>
+          {variants.map((variant) => (
+            <Button key={variant} variant={variant} text={variant} />
+          ))}
+        </Row>
+      </Section>
+      <Section label="Sizes">
+        <Row>
+          {sizes.map((size) => (
+            <Button key={size} size={size} text={size} />
+          ))}
+        </Row>
+      </Section>
+      <Section label="With icon">
+        <Row>
+          <Button text="Left" icon={plusIcon} iconPosition="left" />
+          <Button text="Right" icon={plusIcon} iconPosition="right" />
+        </Row>
+      </Section>
+      <Section label="Disabled">
+        <Row>
+          {variants.map((variant) => (
+            <Button
+              key={variant}
+              variant={variant}
+              text={variant}
+              disabled
+            />
+          ))}
+        </Row>
+      </Section>
+    </Catalog>
+  ),
+};
 
 export const Variants: Story = {
   argTypes: {

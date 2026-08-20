@@ -2,7 +2,10 @@ import {
   forwardRef,
   useId,
   useRef,
+  useState,
+  type ChangeEvent,
   type ComponentProps,
+  type FocusEvent,
   type ReactNode,
 } from "react";
 import { cn } from "@/utils/cn";
@@ -12,8 +15,12 @@ import {
   inputFieldVariants,
   inputIconVariants,
   inputInnerVariants,
+  inputStepperButtonVariants,
+  inputStepperVariants,
   inputWrapperVariants,
 } from "@/components/input/Input.variants";
+import { ChevronDownIcon } from "@/icons/ChevronDownIcon";
+import { ChevronUpIcon } from "@/icons/ChevronUpIcon";
 import { CrossIcon } from "@/icons/CrossIcon";
 
 export type InputProps = Omit<ComponentProps<"input">, "prefix" | "size"> & {
@@ -57,12 +64,70 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       [hasError ? errorId : undefined, ariaDescribedBy].filter(Boolean).join(" ") ||
       undefined;
 
+    const isControlled = value !== undefined;
+    const [uncontrolledHasValue, setUncontrolledHasValue] = useState(
+      () => String(defaultValue ?? "") !== "",
+    );
+    const [isFocusWithin, setIsFocusWithin] = useState(false);
+
+    const hasValue = isControlled ? String(value) !== "" : uncontrolledHasValue;
+    const isNumber = type === "number";
+    /*
+     * A number field hands its right edge to the stepper, so the clear button
+     * would have to sit on top of it.
+     */
+    const showClear = clearable && !isNumber && hasValue && isFocusWithin;
+
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+      if (!isControlled) {
+        setUncontrolledHasValue(event.target.value !== "");
+      }
+
+      onChange?.(event);
+    };
+
     const handleClear = () => {
       onClear?.();
 
-      if (value === undefined && inputRef.current) {
+      if (!isControlled && inputRef.current) {
         inputRef.current.value = "";
+        setUncontrolledHasValue(false);
       }
+    };
+
+    /*
+     * `stepUp`/`stepDown` honour the field's own step, min and max, but they
+     * move the value without going through the property setter React patched,
+     * so React still believes the old value is current. Dispatching `input` is
+     * what makes it compare the two and run onChange, which is the only route
+     * back into a controlled parent's state.
+     */
+    const step = (direction: "up" | "down") => {
+      const input = inputRef.current;
+      if (!input || input.disabled || input.readOnly) return;
+
+      try {
+        if (direction === "up") input.stepUp();
+        else input.stepDown();
+      } catch {
+        // `step="any"` has no next value to move to, so there is nothing to do.
+        return;
+      }
+
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    };
+
+    /*
+     * Focus is tracked on the container rather than the input so that tabbing
+     * from the field to the clear button keeps the button mounted - a blur that
+     * lands inside the container is not a blur as far as this is concerned.
+     */
+    const handleBlur = (event: FocusEvent<HTMLDivElement>) => {
+      if (event.relatedTarget && event.currentTarget.contains(event.relatedTarget)) {
+        return;
+      }
+
+      setIsFocusWithin(false);
     };
 
     return (
@@ -74,12 +139,14 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       >
         <div className={inputWrapperVariants({ error: hasError, size })}>
           {prefix && (
-            <span className={inputAddonVariants({ side: "prefix", size })}>
-              {prefix}
-            </span>
+            <span className={inputAddonVariants({ size })}>{prefix}</span>
           )}
 
-          <div className={inputInnerVariants({ size })}>
+          <div
+            className={inputInnerVariants({ size })}
+            onFocus={() => setIsFocusWithin(true)}
+            onBlur={handleBlur}
+          >
             {leftIcon && (
               <span className={inputIconVariants({ size })} aria-hidden>
                 {leftIcon}
@@ -96,26 +163,57 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               type={type}
               value={value}
               defaultValue={defaultValue}
-              onChange={onChange}
+              onChange={handleChange}
               aria-invalid={hasError}
               aria-describedby={describedBy}
               className={inputFieldVariants()}
               {...props}
             />
 
-            {clearable && (
+            {showClear && (
               <button
                 type="button"
                 className={cn(
                   inputIconVariants({ size }),
-                  "fui:pointer-events-auto fui:cursor-pointer",
+                  "fui:pointer-events-auto fui:cursor-pointer fui:hover:text-neutral-500 fui:active:text-neutral-600",
                 )}
                 aria-label="Clear"
-                disabled={props.disabled}
+                /*
+                 * Keeps the press from moving focus off the input, which would
+                 * unmount this button before the click could land.
+                 */
+                onMouseDown={(event) => event.preventDefault()}
                 onClick={handleClear}
               >
                 <CrossIcon />
               </button>
+            )}
+
+            {isNumber && (
+              <span className={inputStepperVariants()}>
+                <button
+                  type="button"
+                  className={inputStepperButtonVariants()}
+                  aria-label="Increase"
+                  tabIndex={-1}
+                  disabled={props.disabled}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => step("up")}
+                >
+                  <ChevronUpIcon />
+                </button>
+                <button
+                  type="button"
+                  className={inputStepperButtonVariants()}
+                  aria-label="Decrease"
+                  tabIndex={-1}
+                  disabled={props.disabled}
+                  onMouseDown={(event) => event.preventDefault()}
+                  onClick={() => step("down")}
+                >
+                  <ChevronDownIcon />
+                </button>
+              </span>
             )}
 
             {rightIcon && (
@@ -126,9 +224,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           </div>
 
           {suffix && (
-            <span className={inputAddonVariants({ side: "suffix", size })}>
-              {suffix}
-            </span>
+            <span className={inputAddonVariants({ size })}>{suffix}</span>
           )}
         </div>
 

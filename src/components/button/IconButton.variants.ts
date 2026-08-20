@@ -1,11 +1,5 @@
 import { cva } from "class-variance-authority";
 
-/*
- * The size variants set the box with `size-*`, so the browser's default button
- * padding has to be zeroed here or the icon never centres. See
- * Button.variants.ts for why the rest of the preflight stand-in lives in the
- * base string.
- */
 export const iconButtonVariants = cva(
   "fui:box-border fui:m-0 fui:inline-flex fui:shrink-0 fui:appearance-none fui:items-center fui:justify-center fui:border-0 fui:bg-transparent fui:p-0 fui:font-sans fui:leading-normal fui:antialiased fui:cursor-pointer fui:disabled:cursor-not-allowed fui:[&_svg]:block",
   {

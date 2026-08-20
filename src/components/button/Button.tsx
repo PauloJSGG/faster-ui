@@ -32,14 +32,14 @@ export function Button({
   disabled,
   ...props
 }: ButtonProps) {
-  const iconElement = icon ? (
+  const iconElement = icon && (
     <span
       className="fui:inline-flex fui:shrink-0 fui:[&_svg]:block fui:[&_svg]:size-3.5"
       aria-hidden
     >
       {icon}
     </span>
-  ) : null;
+  );
 
   return (
     <button

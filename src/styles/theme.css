@@ -44,6 +44,7 @@
   --color-neutral-300: #E1E1E1;
   --color-neutral-200: #EEEEEE;
   --color-neutral-100: #F5F5F5;
+  --color-neutral-50: #FAFAFA;
 
   /* semantics */
   --color-background: #FFFFFF;
@@ -100,6 +101,13 @@
   --gap-input-md: 8px;
   --gap-input-lg: 8px;
   --margin-input: 0 0 4px 0;
+  /*
+   * primary-600 carrying a 0x29 alpha channel. Spelled out rather than mixed
+   * from the primitive because no percentage of `color-mix` lands on that exact
+   * value, and the ring is specified as a flat colour.
+   */
+  --color-input-focus-ring: #15C5CE29;
+  --shadow-input-focus: 0px 0px 1px 1px var(--fui-color-input-focus-ring);
 
   /* dialog */
   --width-dialog-sm: 400px;

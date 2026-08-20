@@ -16,24 +16,17 @@ const preview: Preview = {
         color: /(background|color)$/i,
         date: /Date$/i,
       },
-      backgrounds: {
-        default: "dark",
-        values: [
-          {
-            name: "dark",
-            value: "#1a1a1a",
-          },
-          {
-            name: "black",
-            value: "#000000",
-          },
-          {
-            name: "white",
-            value: "#ffffff",
-          },
-        ],
+    },
+    backgrounds: {
+      options: {
+        white: { name: "white", value: "#ffffff" },
+        dark: { name: "dark", value: "#1a1a1a" },
+        black: { name: "black", value: "#000000" },
       },
     },
+  },
+  initialGlobals: {
+    backgrounds: { value: "white" },
   },
 };
 

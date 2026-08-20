@@ -12,10 +12,13 @@ import {
 import { CloseIcon } from "@/icons/CloseIcon";
 import { IconButton } from "@/components/button/IconButton";
 import {
+  dialogBodyVariants,
+  dialogCloseVariants,
   dialogDividerVariants,
   dialogFooterVariants,
-  dialogSectionVariants,
-  dialogVariants,
+  dialogPanelVariants,
+  dialogRootVariants,
+  dialogTitleVariants,
 } from "@/components/dialog/Dialog.variants";
 import { useControllableState } from "@/hooks/useControllableState";
 import { cn } from "@/utils/cn";
@@ -104,35 +107,27 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>(
         {...props}
         ref={setDialogRef}
         aria-labelledby={title ? titleId : undefined}
-        className={cn(
-          "fui:box-border fui:fixed fui:inset-0 fui:z-50 fui:m-0 fui:hidden fui:max-h-none fui:w-full fui:max-w-none fui:items-center fui:justify-center fui:border-none fui:bg-transparent fui:font-sans fui:leading-normal fui:text-foreground fui:antialiased fui:p-[24px] fui:backdrop:bg-black/50 fui:open:flex",
-        )}
+        className={dialogRootVariants()}
         onCancel={handleCancel}
         onClick={handleClick}
         onClose={handleClose}
       >
-        <div className={cn(dialogVariants({ size }), className)}>
+        <div className={cn(dialogPanelVariants({ size }), className)}>
           {title && (
-            <h2
-              id={titleId}
-              className={cn(
-                dialogSectionVariants(),
-                "fui:m-0 fui:text-2xl fui:font-bold",
-              )}
-            >
+            <h2 id={titleId} className={dialogTitleVariants()}>
               {title}
             </h2>
           )}
           {title && <hr className={dialogDividerVariants()} />}
           <IconButton
-            className="fui:absolute fui:right-4 fui:top-4 fui:enabled:hover:bg-transparent"
+            className={dialogCloseVariants()}
             icon={<CloseIcon />}
             aria-label="Close"
             variant="ghost"
             size="sm"
             onClick={requestClose}
           />
-          <div className={dialogSectionVariants()}>{children}</div>
+          <div className={dialogBodyVariants()}>{children}</div>
           {footer && <hr className={dialogDividerVariants()} />}
           {footer && <div className={dialogFooterVariants()}>{footer}</div>}
         </div>

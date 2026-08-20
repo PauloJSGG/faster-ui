@@ -25,6 +25,32 @@ const Row = ({ children }: { children: React.ReactNode }) => (
   </div>
 );
 
+const Catalog = ({ children }: { children: React.ReactNode }) => (
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start",
+      gap: "24px",
+    }}
+  >
+    {children}
+  </div>
+);
+
+const Section = ({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) => (
+  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+    <p style={{ margin: 0, fontSize: "12px", color: "#8E8E8E" }}>{label}</p>
+    {children}
+  </div>
+);
+
 const meta = {
   title: "Components/IconButton",
   component: IconButton,
@@ -53,7 +79,67 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Playground: Story = {};
+export const Playground: Story = {
+  argTypes: {
+    variant: { control: false },
+    shape: { control: false },
+    size: { control: false },
+    disabled: { control: false },
+  },
+  render: () => (
+    <Catalog>
+      <Section label="Variants">
+        <Row>
+          {variants.map((variant) => (
+            <IconButton
+              key={variant}
+              icon={plusIcon}
+              variant={variant}
+              aria-label={variant}
+            />
+          ))}
+        </Row>
+      </Section>
+      <Section label="Shapes">
+        <Row>
+          {shapes.map((shape) => (
+            <IconButton
+              key={shape}
+              icon={plusIcon}
+              shape={shape}
+              aria-label={shape}
+            />
+          ))}
+        </Row>
+      </Section>
+      <Section label="Sizes">
+        <Row>
+          {sizes.map((size) => (
+            <IconButton
+              key={size}
+              icon={plusIcon}
+              size={size}
+              aria-label={size}
+            />
+          ))}
+        </Row>
+      </Section>
+      <Section label="Disabled">
+        <Row>
+          {variants.map((variant) => (
+            <IconButton
+              key={variant}
+              icon={plusIcon}
+              variant={variant}
+              aria-label={variant}
+              disabled
+            />
+          ))}
+        </Row>
+      </Section>
+    </Catalog>
+  ),
+};
 
 export const Variants: Story = {
   argTypes: {
