@@ -17,10 +17,6 @@ const sizes = ["sm", "md", "lg"] as const;
 
 const plusIcon = <PlusIcon />;
 
-/*
- * Inline styles rather than utilities: only component source is scanned for
- * classes, so a Tailwind class written here would never be compiled.
- */
 const Row = ({ children }: { children: React.ReactNode }) => (
   <div
     style={{
