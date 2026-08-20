@@ -30,6 +30,7 @@ export type DialogProps = Omit<ComponentProps<"dialog">, "open"> & {
   size?: "sm" | "md" | "lg";
   title?: string;
   footer?: ReactNode;
+  showDivider?: boolean;
 };
 
 export const Dialog = forwardRef<HTMLDialogElement, DialogProps>(
@@ -40,6 +41,7 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>(
       className,
       title,
       footer,
+      showDivider = false,
       open: openProp,
       defaultOpen = false,
       onOpenChange,
@@ -118,7 +120,7 @@ export const Dialog = forwardRef<HTMLDialogElement, DialogProps>(
               {title}
             </h2>
           )}
-          {title && <hr className={dialogDividerVariants()} />}
+          {title && showDivider && <hr className={dialogDividerVariants()} />}
           <IconButton
             className={dialogCloseVariants()}
             icon={<CloseIcon />}

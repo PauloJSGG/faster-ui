@@ -21,6 +21,7 @@ function playgroundFooter(onClose: () => void) {
 type PlaygroundKind =
   | "default"
   | "noTitle"
+  | "divider"
   | "footer"
   | "sm"
   | "md"
@@ -43,6 +44,7 @@ function DialogPlaygroundCatalog() {
       size: (typeof sizes)[number];
       children: string;
       footer?: ReactNode;
+      showDivider?: boolean;
     }
   > = {
     default: {
@@ -55,6 +57,13 @@ function DialogPlaygroundCatalog() {
       label: "No title",
       size: "md",
       children: "Dialog content",
+    },
+    divider: {
+      label: "With divider",
+      title: "Title",
+      size: "md",
+      children: "Dialog content",
+      showDivider: true,
     },
     footer: {
       label: "With footer",
@@ -98,6 +107,7 @@ function DialogPlaygroundCatalog() {
           size={active.size}
           title={active.title}
           footer={active.footer}
+          showDivider={active.showDivider}
           onOpenChange={(nextOpen) => {
             if (!nextOpen) close();
           }}
@@ -188,7 +198,7 @@ const meta = {
   parameters: {
     layout: "centered",
     controls: {
-      include: ["size", "title", "children", "showFooter"],
+      include: ["size", "title", "children", "showFooter", "showDivider"],
     },
   },
   tags: ["autodocs"],
@@ -197,6 +207,7 @@ const meta = {
     size: "md",
     title: "Title",
     showFooter: false,
+    showDivider: false,
   },
   argTypes: {
     size: {
@@ -207,6 +218,7 @@ const meta = {
     title: { control: "text", table: { category: "Content" } },
     children: { control: "text", table: { category: "Content" } },
     showFooter: { control: "boolean", table: { category: "State" } },
+    showDivider: { control: "boolean", table: { category: "Layout" } },
   },
   render: (args) => <DialogDemo {...args} />,
 } satisfies Meta<DialogStoryArgs>;
@@ -225,6 +237,7 @@ export const Sizes: Story = {
   argTypes: {
     size: { control: false },
     showFooter: { control: false },
+    showDivider: { control: false },
   },
   render: (args) => <DialogSizesDemo {...args} />,
 };
@@ -272,12 +285,19 @@ function DialogFooterDemo() {
   );
 }
 
+export const WithDivider: Story = {
+  args: {
+    showDivider: true,
+  },
+};
+
 export const WithFooter: Story = {
   args: {
     size: "sm",
   },
   argTypes: {
     showFooter: { control: false },
+    showDivider: { control: false },
     title: { control: false },
     children: { control: false },
   },
@@ -323,6 +343,7 @@ function DialogScrollDemo() {
 export const ScrollingContent: Story = {
   argTypes: {
     showFooter: { control: false },
+    showDivider: { control: false },
     title: { control: false },
     children: { control: false },
     size: { control: false },

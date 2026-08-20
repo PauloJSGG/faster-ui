@@ -138,6 +138,24 @@ describe("Dialog", () => {
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
+  it("omits the title divider by default and renders it when showDivider is set", () => {
+    const { rerender } = render(
+      <Dialog open title="Details">
+        <div>Body</div>
+      </Dialog>,
+    );
+
+    expect(screen.queryByRole("separator")).not.toBeInTheDocument();
+
+    rerender(
+      <Dialog open title="Details" showDivider>
+        <div>Body</div>
+      </Dialog>,
+    );
+
+    expect(screen.getByRole("separator")).toBeInTheDocument();
+  });
+
   it("fires parent-provided footer actions", async () => {
     const user = userEvent.setup();
     const onDelete = jest.fn();

@@ -28,11 +28,11 @@ export const dialogCloseVariants = cva([
 ]);
 
 export const dialogTitleVariants = cva(
-  "fui:box-border fui:m-0 fui:shrink-0 fui:pt-4 fui:pr-12 fui:pb-4 fui:pl-4 fui:text-2xl fui:font-bold fui:break-words",
+  "fui:box-border fui:m-0 fui:shrink-0 fui:pt-4 fui:pr-12 fui:pb-4 fui:pl-4 fui:text-xl fui:font-bold fui:text-neutral-700 fui:break-words",
 );
 
 export const dialogBodyVariants = cva(
-  "fui:box-border fui:min-h-0 fui:flex-1 fui:overflow-y-auto fui:p-4",
+  "fui:box-border fui:min-h-0 fui:flex-1 fui:overflow-y-auto fui:p-4 fui:text-md fui:text-neutral",
 );
 
 export const dialogFooterVariants = cva(
