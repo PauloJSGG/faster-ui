@@ -95,13 +95,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       }
     };
 
-    /*
-     * `stepUp`/`stepDown` honour the field's own step, min and max, but they
-     * move the value without going through the property setter React patched,
-     * so React still believes the old value is current. Dispatching `input` is
-     * what makes it compare the two and run onChange, which is the only route
-     * back into a controlled parent's state.
-     */
     const step = (direction: "up" | "down") => {
       const input = inputRef.current;
       if (!input || input.disabled || input.readOnly) return;
@@ -117,11 +110,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       input.dispatchEvent(new Event("input", { bubbles: true }));
     };
 
-    /*
-     * Focus is tracked on the container rather than the input so that tabbing
-     * from the field to the clear button keeps the button mounted - a blur that
-     * lands inside the container is not a blur as far as this is concerned.
-     */
     const handleBlur = (event: FocusEvent<HTMLDivElement>) => {
       if (event.relatedTarget && event.currentTarget.contains(event.relatedTarget)) {
         return;

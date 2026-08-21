@@ -6,10 +6,10 @@ export const buttonVariants = cva(
     variants: {
       variant: {
         primary: [
-          "fui:bg-primary fui:text-white",
-          "fui:enabled:hover:bg-primary-hover",
-          "fui:enabled:active:bg-primary-active",
-          "fui:disabled:bg-primary-disabled",
+          "fui:bg-danger fui:text-white",
+          "fui:enabled:hover:bg-danger-hover",
+          "fui:enabled:active:bg-danger-active",
+          "fui:disabled:bg-danger-disabled",
         ],
         outline: [
           "fui:bg-white fui:text-neutral fui:border fui:border-neutral-border",
